@@ -13,34 +13,27 @@ namespace k_means2
 {
 	public partial class Form1 : Form
 	{
-
 		double[][] rawData;
 		double[][] means;
 		int numClusters;
-        int checkedNumClusters;
-        int[] clustering;
+        	int checkedNumClusters;
+        	int[] clustering;
 		bool clustered = false;
 		bool meansComputed = false;
-        
-		Brush[] brushes = { Brushes.LimeGreen, Brushes.Blue, Brushes.Orange, Brushes.Red, Brushes.Violet, Brushes.Turquoise };
-
+        	Brush[] brushes = { Brushes.LimeGreen, Brushes.Blue, Brushes.Orange, Brushes.Red, Brushes.Violet, Brushes.Turquoise };
 
 		public Form1()
 		{
 			InitializeComponent();
 			InitializeTuples();
-            btnClear.Enabled = false;
-            
-            clusters_group.Enabled = false;
-            checkedNumClusters = 3;
-
-        }
+            		btnClear.Enabled = false;
+                 	clusters_group.Enabled = false;
+            		checkedNumClusters = 3;        
+		}
 
 		// задаем набор случайных даных
 		private void InitializeTuples()
 		{
-			//numClusters = Int32.Parse(txt_num_clusters.Text);
-
 			if (rb_group.Checked)
 			{
 				rawData = new double[20][];
@@ -74,7 +67,6 @@ namespace k_means2
 					rawData[i] = new double[] { random.Next(0, 750), random.Next(0, 350) };
 				}
 			}
-
 		}
 
 		private void Form1_Paint(object sender, PaintEventArgs e)
@@ -104,7 +96,6 @@ namespace k_means2
 					}
 				}
 			}
-
 			if (meansComputed)
 			{
 				for (int i =0; i < numClusters; i++)
@@ -119,18 +110,14 @@ namespace k_means2
 		// возращает массив кластеров для исходного набора данных
 		public int[] Cluster()
 		{
-            numClusters = checkedNumClusters;
-            means = new double[numClusters][]; //массив для центроидов
-            for (int k = 0; k < numClusters; ++k)
-                means[k] = new double[rawData[0].Length];
-            //double[][] data = rawData;
-
-            bool changed = true; // были изменения в принадлежности к кластеру
+            		numClusters = checkedNumClusters;
+            		means = new double[numClusters][]; //массив для центроидов
+            		for (int k = 0; k < numClusters; ++k)
+                	means[k] = new double[rawData[0].Length];
+            		bool changed = true; // были изменения в принадлежности к кластеру
 			bool success = true; // все точки приписаны к кластерам
-
 			clustering = InitClustering(); // приписываем данным случайные кластеры
 			clustered = true;
-
 			while (changed == true && success == true)
 			{
 				Refresh();
@@ -143,8 +130,7 @@ namespace k_means2
 
 		//приписываем каждую точку к случайному кластеру так, чтобы к каждому кластеру была приписана хотя бы одна точка
 		private int[] InitClustering()
-		{
-			
+		{	
 			Random random = new Random();
 			int[] clustering = new int[rawData.Length];
 			for (int i = 0; i < numClusters; ++i) 
@@ -189,13 +175,10 @@ namespace k_means2
 		// обновление распределений по кластерам
 		private bool UpdateClustering()
 		{
-            bool changed = false;
-
+            		bool changed = false;
 			int[] newClustering = new int[clustering.Length]; // массив для нового результата
 			Array.Copy(clustering, newClustering, clustering.Length);
-
 			double[] distances = new double[numClusters]; // расстояние от точки до центроидов
-
 			for (int i = 0; i < rawData.Length; ++i) // рассчитываем расстоение до цетроидов для всех точек
 			{
 				for (int k = 0; k < numClusters; ++k)
@@ -258,60 +241,57 @@ namespace k_means2
 			meansComputed = false;
 			InitializeTuples();
 			Refresh();
-            btnGo.Enabled = true;
-        }
+            		btnGo.Enabled = true;
+        	}
 
 		private void btnGo_Click(object sender, EventArgs e)
 		{
-            btnClear.Enabled = false;
-            btnGo.Enabled = false;
-            clustering = Cluster();		
+            		btnClear.Enabled = false;
+            		btnGo.Enabled = false;
+            		clustering = Cluster();		
 			for (int i =0; i< rawData.Length; i++)
 			{
 				lbl1.Text +="\n"+ i + ". " + clustering[i];
 			}
 			clustered = true;
 			Refresh();
-            btnClear.Enabled = true;
-            
-        }
+            		btnClear.Enabled = true;
+		}
 
-        private void rb_random_CheckedChanged(object sender, EventArgs e)
-        {
-            clusters_group.Enabled = true;
-           
-            lbl1.Text = "CLUSTERS:";
-            clustered = false;
-            meansComputed = false;
-            InitializeTuples();
-            Refresh();
-        }
+		private void rb_random_CheckedChanged(object sender, EventArgs e)
+		{
+		    clusters_group.Enabled = true;
+		    lbl1.Text = "CLUSTERS:";
+		    clustered = false;
+		    meansComputed = false;
+		    InitializeTuples();
+		    Refresh();
+		}
 
-        private void rb_group_CheckedChanged(object sender, EventArgs e)
-        {
-            rb_3.Checked = true; 
-            clusters_group.Enabled = false;
-        }
+		private void rb_group_CheckedChanged(object sender, EventArgs e)
+		{
+		    rb_3.Checked = true; 
+		    clusters_group.Enabled = false;
+		}
 
+		private void rb_1_CheckedChanged(object sender, EventArgs e)
+		{
+		    checkedNumClusters = 1;
+		}
 
-        private void rb_1_CheckedChanged(object sender, EventArgs e)
-        {
-            checkedNumClusters = 1;
-        }
+		private void rb_2_CheckedChanged(object sender, EventArgs e)
+		{
+		    checkedNumClusters = 2;
+		}
 
-        private void rb_2_CheckedChanged(object sender, EventArgs e)
-        {
-            checkedNumClusters = 2;
-        }
+		private void rb_3_CheckedChanged(object sender, EventArgs e)
+		{
+		    checkedNumClusters = 3;
+		}
 
-        private void rb_3_CheckedChanged(object sender, EventArgs e)
-        {
-            checkedNumClusters = 3;
-        }
-
-        private void rb_4_CheckedChanged(object sender, EventArgs e)
-        {
-            checkedNumClusters = 4;
-        }
+		private void rb_4_CheckedChanged(object sender, EventArgs e)
+		{
+		    checkedNumClusters = 4;
+		}
     }
 }
